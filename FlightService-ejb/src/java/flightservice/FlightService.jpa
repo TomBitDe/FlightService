@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jpa:entity-mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:java="http://jcp.org/en/jsr/detail?id=270" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jpa="http://java.sun.com/xml/ns/persistence/orm" v="5.2" status="GENERATED" persistenceUnitName="DEFAULT_PU" sm="false" id="_15485115032231" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm orm_2_1.xsd">
+    <jpa:entity name="FLGTSGMTSCHEDULE" compositePrimaryKeyType="EMBEDDEDID" compositePrimaryKeyClass="FlgtSgmtPK" abs="false" class="FlgtSgmtSchedule" v="true" xre="false" m="false" rootElement="_15485115032231" id="_15485115084312">
+        <jpa:attributes>
+            <jpa:basic attribute-type="java.sql.Timestamp" v="true" am="PRIVATE" name="sat" jbt="false" id="_15485115085094">
+                <jpa:column name="SAT" unique="false" nullable="true" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="java.sql.Timestamp" v="true" am="PRIVATE" name="sdt" jbt="false" id="_15485115091995">
+                <jpa:column name="SDT" unique="false" nullable="true" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="java.sql.Timestamp" v="true" am="PRIVATE" name="eat" jbt="false" id="_15485115092526">
+                <jpa:column name="EAT" unique="false" nullable="true" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="java.sql.Timestamp" v="true" am="PRIVATE" name="edt" jbt="false" id="_15485115093377">
+                <jpa:column name="EDT" unique="false" nullable="true" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="java.sql.Timestamp" v="true" am="PRIVATE" name="tdt" jbt="false" id="_15485115093848">
+                <jpa:column name="TDT" unique="false" nullable="true" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="java.sql.Timestamp" v="true" am="PRIVATE" name="lot" jbt="false" id="_15485115094539">
+                <jpa:column name="LOT" unique="false" nullable="true" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="java.sql.Timestamp" v="true" am="PRIVATE" name="updated" dv="[&#xA;java.sql.Timestamp&#xA;]&#xA;new Timestamp(System.currentTimeMillis())" jbt="false" id="_154851150949910">
+                <jpa:column name="UPDATED" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" v="true" am="PRIVATE" name="updtuser" jbt="false" id="_154851150956811">
+                <jpa:column name="UPDTUSER" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:one-to-one own="true" primaryKey="false" connected-entity-id="_154851151124038" fetch="LAZY" v="true" am="PRIVATE" name="flgtSgmt" jbt="false" id="_154851150965313">
+                <jpa:cascade/>
+                <jpa:join-column name="FLGTNO" rc="FLGTNO" unique="false" nullable="true" insertable="false" updatable="false"/>
+                <jpa:join-column name="SCHEDFLGTDT" rc="SCHEDFLGTDT" unique="false" nullable="true" insertable="false" updatable="false"/>
+                <jpa:join-column name="ARPO" rc="ARPO" unique="false" nullable="true" insertable="false" updatable="false"/>
+            </jpa:one-to-one>
+            <jpa:id attribute-type="flightservice.model.FlgtPK" v="true" am="DEFAULT" name="flgtPK" jbt="false" id="_154851150975314"/>
+            <jpa:id attribute-type="String" v="true" am="DEFAULT" name="arpo" jbt="false" id="_154851150978515">
+                <jpa:column name="ARPO" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:id>
+            <jpa:embedded-id v="true" am="PRIVATE" name="flgtSgmtPK" jbt="false" id="_15485115084993"/>
+            <jpa:version attribute-type="int" v="true" am="PRIVATE" name="version" jbt="false" id="_154851150962212"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity abs="false" class="PassengerFlgt" superclassId="_154851151195955" v="true" xre="false" m="false" rootElement="_15485115032231" id="_154851150991616">
+        <jpa:attributes>
+            <jpa:one-to-many orp="true" own="true" collection-type="java.util.List" connected-entity-id="_154851151087028" fetch="EAGER" v="true" am="PRIVATE" name="seatConfiguration" dv="[&#xA;java.util.ArrayList ,&#xA;java.util.List&#xA;]&#xA;new ArrayList&lt;&gt;()" jbt="false" id="_154851150991617">
+                <jpa:cascade>
+                    <jpa:cascade-all/>
+                </jpa:cascade>
+                <jpa:join-column name="FLGTNO" rc="FLGTNO" unique="false" nullable="true" insertable="false" updatable="false"/>
+                <jpa:join-column name="SCHEDFLGTDT" rc="SCHEDFLGTDT" unique="false" nullable="true" insertable="false" updatable="false"/>
+            </jpa:one-to-many>
+        </jpa:attributes>
+        <jpa:discriminator-value>PAX</jpa:discriminator-value>
+    </jpa:entity>
+    <jpa:entity name="FLGT" compositePrimaryKeyType="EMBEDDEDID" compositePrimaryKeyClass="FlgtPK" abs="false" class="Flgt" v="true" xre="false" m="false" rootElement="_15485115032231" id="_154851151195955">
+        <jpa:attributes>
+            <jpa:basic attribute-type="String" v="true" am="PRIVATE" name="flgtType" jbt="false" id="_154851151195957">
+                <jpa:column name="FLGTTYPE" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" v="true" am="PRIVATE" name="acType" jbt="false" id="_154851151201258">
+                <jpa:column name="ACTYPE" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="java.sql.Timestamp" v="true" am="PRIVATE" name="updated" jbt="false" id="_154851151207559">
+                <jpa:column name="UPDATED" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" v="true" am="PRIVATE" name="updtuser" jbt="false" id="_154851151212860">
+                <jpa:column name="UPDTUSER" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:one-to-many orp="true" own="true" collection-type="java.util.List" connected-entity-id="_154851151124038" fetch="EAGER" v="true" am="PRIVATE" name="segments" dv="[&#xA;java.util.ArrayList ,&#xA;java.util.List&#xA;]&#xA;new ArrayList&lt;&gt;()" jbt="false" id="_154851151218262">
+                <jpa:cascade>
+                    <jpa:cascade-all/>
+                </jpa:cascade>
+                <jpa:join-column name="FLGTNO" rc="FLGTNO" unique="false" nullable="true" insertable="false" updatable="false"/>
+                <jpa:join-column name="SCHEDFLGTDT" rc="SCHEDFLGTDT" unique="false" nullable="true" insertable="false" updatable="false"/>
+                <jpa:join-column name="FLGTNO" rc="FLGTNO" unique="false" nullable="true" insertable="false" updatable="false"/>
+                <jpa:join-column name="SCHEDFLGTDT" rc="SCHEDFLGTDT" unique="false" nullable="true" insertable="false" updatable="false"/>
+            </jpa:one-to-many>
+            <jpa:id attribute-type="String" v="true" am="DEFAULT" name="flgtNo" jbt="false" id="_154851151237563">
+                <jpa:column name="FLGTNO" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:id>
+            <jpa:id attribute-type="String" v="true" am="DEFAULT" name="schedFlgtDt" jbt="false" id="_154851151243564">
+                <jpa:column name="SCHEDFLGTDT" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:id>
+            <jpa:embedded-id v="true" am="PRIVATE" name="flgtPK" jbt="false" id="_154851151195956"/>
+            <jpa:version attribute-type="int" v="true" am="PRIVATE" name="version" jbt="false" id="_154851151218261"/>
+        </jpa:attributes>
+        <jpa:nq e="true" name="Flgt.findAll">
+            <jpa:query>SELECT f FROM FLGT f</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="true" name="Flgt.findAllFreighter">
+            <jpa:query>SELECT f FROM FLGT f WHERE f.flgtType = 'FTR'</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="true" name="Flgt.findAllPassenger">
+            <jpa:query>SELECT f FROM FLGT f WHERE f.flgtType = 'PAX'</jpa:query>
+        </jpa:nq>
+        <jpa:inheritance strategy="SINGLE_TABLE"/>
+        <jpa:discriminator-column name="FLGTTYPE"/>
+    </jpa:entity>
+    <jpa:entity name="SEATCATEGORY" compositePrimaryKeyType="EMBEDDEDID" compositePrimaryKeyClass="SeatCategoryPK" abs="false" class="SeatCategory" v="true" xre="false" m="false" rootElement="_15485115032231" id="_154851151087028">
+        <jpa:attributes>
+            <jpa:basic attribute-type="int" v="true" am="PRIVATE" name="seats" jbt="false" id="_154851151087030">
+                <jpa:column name="SEATS" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="java.sql.Timestamp" v="true" am="PRIVATE" name="updated" jbt="false" id="_154851151087031">
+                <jpa:column name="UPDATED" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" v="true" am="PRIVATE" name="updtuser" jbt="false" id="_154851151093932">
+                <jpa:column name="UPDTUSER" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:many-to-one primaryKey="false" connected-entity-id="_154851150991616" fetch="LAZY" v="true" am="PRIVATE" name="passengerFlgt" jbt="false" id="_154851151098634">
+                <jpa:cascade/>
+                <jpa:join-column name="FLGTNO" rc="FLGTNO" unique="false" nullable="true" insertable="false" updatable="false"/>
+                <jpa:join-column name="SCHEDFLGTDT" rc="SCHEDFLGTDT" unique="false" nullable="true" insertable="false" updatable="false"/>
+            </jpa:many-to-one>
+            <jpa:id attribute-type="flightservice.model.FlgtPK" v="true" am="DEFAULT" name="flgtPK" jbt="false" id="_154851151105535"/>
+            <jpa:id attribute-type="String" v="true" am="DEFAULT" name="category" jbt="false" id="_154851151107136">
+                <jpa:column name="CATEGORY" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:id>
+            <jpa:embedded-id v="true" am="PRIVATE" name="seatCategoryPK" jbt="false" id="_154851151087029"/>
+            <jpa:version attribute-type="int" v="true" am="PRIVATE" name="version" jbt="false" id="_154851151098633"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity abs="false" class="FreighterFlgt" superclassId="_154851151195955" v="true" xre="false" m="false" rootElement="_15485115032231" id="_154851151115537">
+        <jpa:attributes/>
+        <jpa:discriminator-value>FTR</jpa:discriminator-value>
+    </jpa:entity>
+    <jpa:entity name="FLGTSGMT" compositePrimaryKeyType="EMBEDDEDID" compositePrimaryKeyClass="FlgtSgmtPK" abs="false" class="FlgtSgmt" v="true" xre="false" m="false" rootElement="_15485115032231" id="_154851151124038">
+        <jpa:removedAttributes>
+            <jpa:i>sgmtSchedule</jpa:i>
+        </jpa:removedAttributes>
+        <jpa:attributes>
+            <jpa:basic attribute-type="int" v="true" am="PRIVATE" name="seqNo" jbt="false" id="_154851151124040">
+                <jpa:column name="SEQNO" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" v="true" am="PRIVATE" name="schedFlgtTm" jbt="false" id="_154851151124041">
+                <jpa:column name="SCHEDFLGTTM" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="flightservice.model.FlgtStatus" v="true" am="PRIVATE" name="flgtStatus" jbt="false" id="_154851151130342">
+                <jpa:column name="FLGTSTATUS" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" v="true" am="PRIVATE" name="parkingLot" jbt="false" id="_154851151132543">
+                <jpa:column name="PARKINGLOT" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" v="true" am="PRIVATE" name="gate" jbt="false" id="_154851151138744">
+                <jpa:column name="GATE" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" v="true" am="PRIVATE" name="paxExit" jbt="false" id="_154851151144145">
+                <jpa:column name="PAXEXIT" unique="false" nullable="true" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" v="true" am="PRIVATE" name="checkinCounter" jbt="false" id="_154851151148746">
+                <jpa:column name="CHECKINCOUNTER" unique="false" nullable="true" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" v="true" am="PRIVATE" name="comment" jbt="false" id="_154851151155647">
+                <jpa:column name="COMMENT" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="java.sql.Timestamp" v="true" am="PRIVATE" name="updated" jbt="false" id="_154851151162248">
+                <jpa:column name="UPDATED" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" v="true" am="PRIVATE" name="updtuser" jbt="false" id="_154851151169649">
+                <jpa:column name="UPDTUSER" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:basic>
+            <jpa:many-to-one primaryKey="false" connected-entity-id="_154851151195955" fetch="LAZY" v="true" am="PRIVATE" name="flgt" jbt="false" id="_154851151175851">
+                <jpa:cascade/>
+                <jpa:join-column name="FLGTNO" rc="FLGTNO" unique="false" nullable="true" insertable="false" updatable="false"/>
+                <jpa:join-column name="SCHEDFLGTDT" rc="SCHEDFLGTDT" unique="false" nullable="true" insertable="false" updatable="false"/>
+            </jpa:many-to-one>
+            <jpa:id attribute-type="flightservice.model.FlgtPK" v="true" am="DEFAULT" name="flgtPK" jbt="false" id="_154851151184353"/>
+            <jpa:id attribute-type="String" v="true" am="DEFAULT" name="arpo" jbt="false" id="_154851151188154">
+                <jpa:column name="ARPO" unique="false" nullable="false" insertable="true" updatable="true"/>
+            </jpa:id>
+            <jpa:embedded-id v="true" am="PRIVATE" name="flgtSgmtPK" jbt="false" id="_154851151124039"/>
+            <jpa:version attribute-type="int" v="true" am="PRIVATE" name="version" jbt="false" id="_154851151175850"/>
+        </jpa:attributes>
+        <jpa:nq e="true" name="FlgtSgmt.findAll">
+            <jpa:query>SELECT s FROM FLGTSGMT s ORDER BY s.flgtSgmtPK.flgtPK.flgtNo, s.flgtSgmtPK.flgtPK.schedFlgtDt, s.seqNo</jpa:query>
+        </jpa:nq>
+    </jpa:entity>
+</jpa:entity-mappings>
