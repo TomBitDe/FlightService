@@ -168,7 +168,7 @@ public class SeatCategory implements Serializable {
 
     @Override
     public String toString() {
-        return "SeatCategory{" + "seatCategoryPK=" + seatCategoryPK.toString() + ", seats=" + seats + ", updated=" + updated + ", updtuser=" + updtuser + ", version=" + version + ", passengerFlgt=" + passengerFlgt + '}';
+        return "SeatCategory{" + "seatCategoryPK=" + seatCategoryPK.toString() + ", seats=" + seats + ", updated=" + updated + ", updtuser=" + updtuser + ", version=" + version + ", passengerFlgt=" + passengerFlgt.toString() + '}';
     }
 
 }
