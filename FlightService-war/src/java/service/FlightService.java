@@ -140,6 +140,15 @@ public class FlightService {
         return response;
     }
 
+    /**
+     * A list of all passenger arrival flights.
+     *
+     * @param arpo     the airport to show passenger arrival flights for
+     * @param startEat the timestamp to start with
+     * @param count    the maximum arrivals to fetch
+     *
+     * @return the matching passenger arrival flights
+     */
     @PermitAll
     @GET
     @Path("/pax_arrivals/{arpo}/{startEat}/{count}")
@@ -163,6 +172,15 @@ public class FlightService {
         return response;
     }
 
+    /**
+     * A list of all passenger departure flights.
+     *
+     * @param arpo     the airport to show passenger departure flights for
+     * @param startEdt the timestamp to start with
+     * @param count    the maximum departures to fetch
+     *
+     * @return the matching passenger departure flights
+     */
     @PermitAll
     @GET
     @Path("/pax_departures/{arpo}/{startEdt}/{count}")
@@ -186,6 +204,15 @@ public class FlightService {
         return response;
     }
 
+    /**
+     * A list of all arrival flights.
+     *
+     * @param arpo     the airport to show arrival flights for
+     * @param startEat the timestamp to start with
+     * @param count    the maximum arrivals to fetch
+     *
+     * @return the matching arrival flights
+     */
     @PermitAll
     @GET
     @Path("/arrivals/{arpo}/{startEat}/{count}")
@@ -209,6 +236,15 @@ public class FlightService {
         return response;
     }
 
+    /**
+     * A list of all departure flights.
+     *
+     * @param arpo     the airport to show departure flights for
+     * @param startEdt the timestamp to start with
+     * @param count    the maximum departures to fetch
+     *
+     * @return the matching departure flights
+     */
     @PermitAll
     @GET
     @Path("/departures/{arpo}/{startEdt}/{count}")
