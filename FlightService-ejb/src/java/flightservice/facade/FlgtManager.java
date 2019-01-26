@@ -8,7 +8,6 @@ import flightservice.model.FlgtPK;
 import flightservice.model.FlgtSgmt;
 import flightservice.model.FlgtSgmtSchedule;
 import flightservice.model.FlgtStatus;
-import flightservice.model.PassengerFlgt;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -145,13 +144,59 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
     }
 
     @Override
-    public List<PassengerFlgt> getPaxFlightArrivals(String arpo, Timestamp startEat, int count) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<ArrivalVO> getPaxFlightArrivals(String arpo, Timestamp startEat, int count) {
+        if (count < 1) {
+            throw new IllegalArgumentException("count < 1");
+        }
+
+        System.out.println("Search max [" + count + "] PAX ARRIVALS for [" + arpo + "] [" + startEat + "]");
+
+        Query query = em.createQuery("select s FROM FLGTSGMTSCHEDULE s WHERE s.flgtSgmtPK.arpo = :arpo and s.eat >= :startEat ORDER BY s.eat");
+        query.setParameter("arpo", arpo).setParameter("startEat", startEat);
+        query.setMaxResults(count);
+        List<FlgtSgmtSchedule> sgmtScheduleList = query.getResultList();
+
+        System.out.println("Found [" + sgmtScheduleList.size() + "] sgmt schedule(s)");
+
+        List<ArrivalVO> arrivalList = new ArrayList<>();
+        for (FlgtSgmtSchedule sgmtSchedule : sgmtScheduleList) {
+            if (isArrival(sgmtSchedule.getFlgtSgmt()) && isPaxFlight(sgmtSchedule.getFlgtSgmt().getFlgt())) {
+                ArrivalVO arrival = buildArrivalVO(sgmtSchedule);
+
+                arrivalList.add(arrival);
+                System.out.println(arrival.toString());
+            }
+        }
+
+        return arrivalList;
     }
 
     @Override
-    public List<PassengerFlgt> getPaxFlightDepartures(String arpo, Timestamp startEdt, int count) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<DepartureVO> getPaxFlightDepartures(String arpo, Timestamp startEdt, int count) {
+        if (count < 1) {
+            throw new IllegalArgumentException("count < 1");
+        }
+
+        System.out.println("Search max [" + count + "] PAX DEPARTURES for [" + arpo + "] [" + startEdt + "]");
+
+        Query query = em.createQuery("select s FROM FLGTSGMTSCHEDULE s WHERE s.flgtSgmtPK.arpo = :arpo and s.eat >= :startEdt ORDER BY s.eat");
+        query.setParameter("arpo", arpo).setParameter("startEdt", startEdt);
+        query.setMaxResults(count);
+        List<FlgtSgmtSchedule> sgmtScheduleList = query.getResultList();
+
+        System.out.println("Found [" + sgmtScheduleList.size() + "] sgmt schedule(s)");
+
+        List<DepartureVO> departureList = new ArrayList<>();
+        for (FlgtSgmtSchedule sgmtSchedule : sgmtScheduleList) {
+            if (!isArrival(sgmtSchedule.getFlgtSgmt()) && isPaxFlight(sgmtSchedule.getFlgtSgmt().getFlgt())) {
+                DepartureVO departure = buildDepartureVO(sgmtSchedule);
+
+                departureList.add(departure);
+                System.out.println(departure.toString());
+            }
+        }
+
+        return departureList;
     }
 
     @Override
@@ -225,6 +270,21 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
         }
 
         return ret;
+    }
+
+    /**
+     * Check if a flight is a passenger flight
+     */
+    private boolean isPaxFlight(Flgt flgt) {
+        if (flgt == null || flgt.getFlgtType() == null) {
+            throw new IllegalArgumentException("flgt == null");
+
+        }
+        if (flgt.getFlgtType() == null) {
+            throw new IllegalArgumentException("flgtType == null");
+
+        }
+        return flgt.getFlgtType().equals("PAX");
     }
 
     /**

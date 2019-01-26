@@ -2,7 +2,6 @@ package flightservice.boundary;
 
 import flightservice.model.Flgt;
 import flightservice.model.FlgtPK;
-import flightservice.model.PassengerFlgt;
 import java.sql.Timestamp;
 import java.util.List;
 import javax.ejb.Remote;
@@ -45,9 +44,9 @@ public interface FlgtManagerRemote {
      * @param startEat the starting estimated arrival timestamp
      * @param count    the maximum number of arrivals to return
      *
-     * @return the passanger flight arrival list
+     * @return the passenger flight arrival list
      */
-    public List<PassengerFlgt> getPaxFlightArrivals(String arpo, Timestamp startEat, int count);
+    public List<ArrivalVO> getPaxFlightArrivals(String arpo, Timestamp startEat, int count);
 
     /**
      * Get the passenger flight departures.
@@ -56,9 +55,9 @@ public interface FlgtManagerRemote {
      * @param startEdt the starting estimated departure timestamp
      * @param count    the maximum number of departures to return
      *
-     * @return the passanger flight departures list
+     * @return the passenger flight departures list
      */
-    public List<PassengerFlgt> getPaxFlightDepartures(String arpo, Timestamp startEdt, int count);
+    public List<DepartureVO> getPaxFlightDepartures(String arpo, Timestamp startEdt, int count);
 
     /**
      * Get all arrivals PAX, FTR and TRC.

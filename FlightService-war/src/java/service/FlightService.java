@@ -9,7 +9,6 @@ import flightservice.boundary.FlgtManagerRemote;
 import flightservice.boundary.FlgtVO;
 import flightservice.model.Flgt;
 import flightservice.model.FlgtPK;
-import flightservice.model.PassengerFlgt;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -149,10 +148,19 @@ public class FlightService {
         int intCount = Integer.valueOf(count);
         Timestamp tsStartEat = Timestamp.valueOf(startEat);
 
-        List<PassengerFlgt> passengerFlightList = flightMangerRemote.getPaxFlightArrivals(arpo, tsStartEat, intCount);
+        // Get the ArrivalVOs from the remote call as a List
+        List<ArrivalVO> paxArrivalList = flightMangerRemote.getPaxFlightArrivals(arpo, tsStartEat, intCount);
 
-        return Response.ok().entity("false").build();
+        // Prepare to make an ArrivalListVO from arrivalList for display
+        ArrivalListVO paxArrivalListVO = new ArrivalListVO();
 
+        if (paxArrivalList != null) {
+            paxArrivalListVO.setArrivalList(paxArrivalList);
+        }
+
+        Response response = Response.ok().entity(paxArrivalListVO).build();
+
+        return response;
     }
 
     @PermitAll
@@ -163,10 +171,19 @@ public class FlightService {
         int intCount = Integer.valueOf(count);
         Timestamp tsStartEdt = Timestamp.valueOf(startEdt);
 
-        List<PassengerFlgt> passengerFlightList = flightMangerRemote.getPaxFlightDepartures(arpo, tsStartEdt, intCount);
+        // Get the DepartureVOs from the remote call as a List
+        List<DepartureVO> paxDepartureList = flightMangerRemote.getPaxFlightDepartures(arpo, tsStartEdt, intCount);
 
-        return Response.ok().entity("false").build();
+        // Prepare to make an DepartureListVO from departureList for display
+        DepartureListVO paxDepartureListVO = new DepartureListVO();
 
+        if (paxDepartureList != null) {
+            paxDepartureListVO.setDepartureList(paxDepartureList);
+        }
+
+        Response response = Response.ok().entity(paxDepartureListVO).build();
+
+        return response;
     }
 
     @PermitAll
