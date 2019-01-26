@@ -65,6 +65,6 @@ public class DepartureVO extends InfoDisplayVO implements Serializable {
 
     @Override
     public String toString() {
-        return "DepartureVO{" + "gate=" + gate + ", checkinCounter=" + checkinCounter + '}';
+        return "DepartureVO{" + super.toString() + ", gate=" + gate + ", checkinCounter=" + checkinCounter + '}';
     }
 }

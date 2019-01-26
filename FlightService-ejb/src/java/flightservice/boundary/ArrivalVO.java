@@ -52,6 +52,6 @@ public class ArrivalVO extends InfoDisplayVO implements Serializable {
 
     @Override
     public String toString() {
-        return "ArrivalVO{" + super.toString() + "paxExit=" + paxExit + '}';
+        return "ArrivalVO{" + super.toString() + ", paxExit=" + paxExit + '}';
     }
 }
