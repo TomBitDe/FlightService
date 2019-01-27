@@ -1,7 +1,7 @@
 /**
  * RESTful FlightService<br>
  * <br>
- * Test with your browsers integrated RESTClient functionality. Firefox has a RESTClient add-on.
+ * Test with your browsers integrated RESTClient functionality. Firefox has a RESTClient add-on:
  * <br><br>
  * - options (OPTIONS http://localhost:8080/FlightService-war/rest/FlightService)<br>
  * - flights (GET http://localhost:8080/FlightService-war/rest/FlightService/flights/0/100)<br>
@@ -15,5 +15,9 @@
  * - departures (GET http://localhost:8080/FlightService-war/rest/FlightService/departures/FRA/2011-10-02
  * 18:48:00/50)<br>
  * - count (GET http://localhost:8080/FlightService-war/rest/FlightService/count)<br>
+ * <br>
+ * The test data in the database support the following:<br><br>
+ * - arrival airports are KGL, EBB, DXB and DWC.<br>
+ * - departure airports are BRU, KGL, DUS and FRA.<br>
  */
 package service;
