@@ -1,3 +1,7 @@
 /build/
 /dist/
 /docu/
+/FlightService-ejb/build/
+/FlightService-ejb/dist/
+/FlightService-war/build/
+/FlightService-war/dist/
