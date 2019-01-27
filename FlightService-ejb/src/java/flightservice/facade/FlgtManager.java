@@ -188,7 +188,7 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
 
         List<DepartureVO> departureList = new ArrayList<>();
         for (FlgtSgmtSchedule sgmtSchedule : sgmtScheduleList) {
-            if (!isArrival(sgmtSchedule.getFlgtSgmt()) && isPaxFlight(sgmtSchedule.getFlgtSgmt().getFlgt())) {
+            if (isDeparture(sgmtSchedule.getFlgtSgmt()) && isPaxFlight(sgmtSchedule.getFlgtSgmt().getFlgt())) {
                 DepartureVO departure = buildDepartureVO(sgmtSchedule);
 
                 departureList.add(departure);
@@ -244,7 +244,7 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
 
         List<DepartureVO> departureList = new ArrayList<>();
         for (FlgtSgmtSchedule sgmtSchedule : sgmtScheduleList) {
-            if (!isArrival(sgmtSchedule.getFlgtSgmt())) {
+            if (isDeparture(sgmtSchedule.getFlgtSgmt())) {
                 DepartureVO departure = buildDepartureVO(sgmtSchedule);
 
                 departureList.add(departure);
@@ -255,28 +255,47 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
         return departureList;
     }
 
-    /**
-     * Check if a flight segment is an arrival segment
-     *
-     * @param sgmt the flight segment
-     *
-     * @return true if the flight segment is an arrival else false
-     */
-    private boolean isArrival(FlgtSgmt sgmt) {
+    @Override
+    public boolean isArrival(FlgtSgmt sgmt) {
+        if (sgmt == null) {
+            throw new IllegalArgumentException("sgmt == null");
+        }
+
         boolean ret = true;
 
-        if (sgmt.getSeqNo() == 0) {
+        System.out.println("Find sgmt for " + sgmt.getFlgtSgmtPK().toString() + " with seqNo < " + sgmt.getSeqNo());
+
+        Query query = em.createQuery("select s.seqNo FROM FLGTSGMT s WHERE s.flgtSgmtPK = :sgmtPK and s.seqNo < :seqNo");
+        query.setParameter("sgmtPK", sgmt.getFlgtSgmtPK()).setParameter("seqNo", sgmt.getSeqNo());
+        if (!query.getResultList().isEmpty()) {
             ret = false;
         }
 
         return ret;
     }
 
-    /**
-     * Check if a flight is a passenger flight
-     */
-    private boolean isPaxFlight(Flgt flgt) {
-        if (flgt == null || flgt.getFlgtType() == null) {
+    @Override
+    public boolean isDeparture(FlgtSgmt sgmt) {
+        if (sgmt == null) {
+            throw new IllegalArgumentException("sgmt == null");
+        }
+
+        boolean ret = true;
+
+        System.out.println("Find sgmt for " + sgmt.getFlgtSgmtPK().toString() + " with seqNo > " + sgmt.getSeqNo());
+
+        Query query = em.createQuery("select s.seqNo FROM FLGTSGMT s WHERE s.flgtSgmtPK = :sgmtPK and s.seqNo > :seqNo");
+        query.setParameter("sgmtPK", sgmt.getFlgtSgmtPK()).setParameter("seqNo", sgmt.getSeqNo());
+        if (!query.getResultList().isEmpty()) {
+            ret = false;
+        }
+
+        return ret;
+    }
+
+    @Override
+    public boolean isPaxFlight(Flgt flgt) {
+        if (flgt == null) {
             throw new IllegalArgumentException("flgt == null");
 
         }

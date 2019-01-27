@@ -35,4 +35,31 @@ public interface FlgtManagerLocal {
      * @return the requested flight route
      */
     public List<FlgtSgmt> getFlgtRoute(FlgtPK id);
+
+    /**
+     * Check if a flight segment is an arrival segment
+     *
+     * @param sgmt the flight segment
+     *
+     * @return true if the flight segment is an arrival else false
+     */
+    public boolean isArrival(FlgtSgmt sgmt);
+
+    /**
+     * Check if a flight segment is a departure segment
+     *
+     * @param sgmt the flight segment
+     *
+     * @return true if the flight segment is a departure else false
+     */
+    public boolean isDeparture(FlgtSgmt sgmt);
+
+    /**
+     * Check if a flight is a passenger flight
+     *
+     * @param flgt the flight to check
+     *
+     * @return true in case of a passenger flight, else false
+     */
+    public boolean isPaxFlight(Flgt flgt);
 }
