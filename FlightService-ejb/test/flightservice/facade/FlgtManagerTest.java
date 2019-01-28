@@ -3,10 +3,11 @@ package flightservice.facade;
 import flightservice.model.Flgt;
 import flightservice.model.FlgtPK;
 import flightservice.model.FlgtSgmt;
+import javax.ejb.embeddable.EJBContainer;
+import javax.naming.Context;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,16 +16,24 @@ import org.junit.Test;
  * Tests for the FlgtManager implementation
  */
 public class FlgtManagerTest {
+    private static EJBContainer ejbContainer;
+    private static Context ctx;
+    private static String jndiName = "java:global/classes/FlgtManager!flightservice.facade.FlgtManagerLocal";
 
     public FlgtManagerTest() {
     }
 
     @BeforeClass
     public static void setUpClass() {
+        ejbContainer = EJBContainer.createEJBContainer();
+        System.out.println("Starting the container");
+        ctx = ejbContainer.getContext();
     }
 
     @AfterClass
     public static void tearDownClass() {
+        ejbContainer.close();
+        System.out.println("Closing the container");
     }
 
     @Before
@@ -41,13 +50,28 @@ public class FlgtManagerTest {
     @Test
     public void testIsArrival() throws Exception {
         System.out.println("isArrival");
-        FlgtSgmt sgmt = null;
-        FlgtManager instance = new FlgtManager();
-        boolean expResult = false;
-        boolean result = instance.isArrival(sgmt);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        FlgtManagerLocal flgtManager = (FlgtManagerLocal) ctx.lookup(jndiName);
+        FlgtSgmt sgmt;
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 85", "20190109")).get(1);
+        assertEquals(true, flgtManager.isArrival(sgmt));
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 9994", "20190109")).get(1);
+        assertEquals(true, flgtManager.isArrival(sgmt));
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("SN 467", "20190109")).get(1);
+        assertEquals(true, flgtManager.isArrival(sgmt));
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("SN 467", "20190109")).get(2);
+        assertEquals(true, flgtManager.isArrival(sgmt));
+
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 85", "20190109")).get(0);
+        assertEquals(false, flgtManager.isArrival(sgmt));
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 9994", "20190109")).get(0);
+        assertEquals(false, flgtManager.isArrival(sgmt));
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("SN 467", "20190109")).get(0);
+        assertEquals(false, flgtManager.isArrival(sgmt));
+
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("SN 467", "20190109")).get(1);
+        assertEquals(true, flgtManager.isArrival(sgmt));
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("SN 467", "20190109")).get(0);
+        assertEquals(false, flgtManager.isArrival(sgmt));
     }
 
     /**
@@ -56,13 +80,17 @@ public class FlgtManagerTest {
     @Test
     public void testIsDeparture() throws Exception {
         System.out.println("isDeparture");
-        FlgtSgmt sgmt = null;
-        FlgtManager instance = new FlgtManager();
-        boolean expResult = false;
-        boolean result = instance.isDeparture(sgmt);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        FlgtManagerLocal flgtManager = (FlgtManagerLocal) ctx.lookup(jndiName);
+        FlgtSgmt sgmt;
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 85", "20190109")).get(0);
+        assertEquals(true, flgtManager.isDeparture(sgmt));
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 9994", "20190109")).get(0);
+        assertEquals(true, flgtManager.isDeparture(sgmt));
+
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 85", "20190109")).get(1);
+        assertEquals(false, flgtManager.isDeparture(sgmt));
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 9994", "20190109")).get(1);
+        assertEquals(false, flgtManager.isDeparture(sgmt));
     }
 
     /**
@@ -71,11 +99,11 @@ public class FlgtManagerTest {
     @Test
     public void testIsPaxFlight() throws Exception {
         System.out.println("isPaxFlight");
-        Flgt flgt = null;
-        FlgtManager instance = new FlgtManager();
-        flgt = instance.getById(new FlgtPK("EK 85", "20190109"));
-        boolean expResult = true;
-        boolean result = instance.isPaxFlight(flgt);
-        assertEquals(expResult, result);
+        FlgtManagerLocal flgtManager = (FlgtManagerLocal) ctx.lookup(jndiName);
+        Flgt flgt;
+        flgt = flgtManager.getById(new FlgtPK("EK 85", "20190109"));
+        assertEquals(true, flgtManager.isPaxFlight(flgt));
+        flgt = flgtManager.getById(new FlgtPK("EK 9994", "20190109"));
+        assertEquals(false, flgtManager.isPaxFlight(flgt));
     }
 }
