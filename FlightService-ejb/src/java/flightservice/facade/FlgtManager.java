@@ -263,11 +263,14 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
 
         boolean ret = true;
 
-        System.out.println("Find sgmt for " + sgmt.getFlgtSgmtPK().toString() + " with seqNo < " + sgmt.getSeqNo());
+        System.out.println("Find sgmt for flgt " + sgmt.getFlgtSgmtPK().getFlgtPK().toString() + " with seqNo < " + sgmt.getSeqNo());
 
-        Query query = em.createQuery("select s.seqNo FROM FLGTSGMT s WHERE s.flgtSgmtPK = :sgmtPK and s.seqNo < :seqNo");
-        query.setParameter("sgmtPK", sgmt.getFlgtSgmtPK()).setParameter("seqNo", sgmt.getSeqNo());
-        if (!query.getResultList().isEmpty()) {
+        // Fetch the segments for this flight with a lesser seqNo
+        Query query = em.createQuery("select s.seqNo FROM FLGTSGMT s WHERE s.flgtSgmtPK.flgtPK = :flgtPK and s.seqNo < :seqNo");
+        query.setParameter("flgtPK", sgmt.getFlgtSgmtPK().getFlgtPK()).setParameter("seqNo", sgmt.getSeqNo());
+        // Check the fetched list
+        if (query.getResultList().isEmpty()) {
+            // The list is empty, no segment with a lesser seqNo --> there is no lesser segment in the route, this sgmt is a departure
             ret = false;
         }
 
@@ -282,11 +285,14 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
 
         boolean ret = true;
 
-        System.out.println("Find sgmt for " + sgmt.getFlgtSgmtPK().toString() + " with seqNo > " + sgmt.getSeqNo());
+        System.out.println("Find sgmt for flgt " + sgmt.getFlgtSgmtPK().getFlgtPK().toString() + " with seqNo > " + sgmt.getSeqNo());
 
-        Query query = em.createQuery("select s.seqNo FROM FLGTSGMT s WHERE s.flgtSgmtPK = :sgmtPK and s.seqNo > :seqNo");
-        query.setParameter("sgmtPK", sgmt.getFlgtSgmtPK()).setParameter("seqNo", sgmt.getSeqNo());
-        if (!query.getResultList().isEmpty()) {
+        // Fetch the segments for this flight with a greater seqNo
+        Query query = em.createQuery("select s.seqNo FROM FLGTSGMT s WHERE s.flgtSgmtPK.flgtPK = :flgtPK and s.seqNo > :seqNo");
+        query.setParameter("flgtPK", sgmt.getFlgtSgmtPK().getFlgtPK()).setParameter("seqNo", sgmt.getSeqNo());
+        // Check the fetched list
+        if (query.getResultList().isEmpty()) {
+            // The list is empty, no segment with a greater seqNo --> there is no greater segment in the route, this sgmt is an arrival
             ret = false;
         }
 
