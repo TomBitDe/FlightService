@@ -18,7 +18,7 @@ import org.junit.Test;
 public class FlgtManagerTest {
     private static EJBContainer ejbContainer;
     private static Context ctx;
-    private static String jndiName = "java:global/classes/FlgtManager!flightservice.facade.FlgtManagerLocal";
+    private static final String LOCAL_JNDI_NAME = "java:global/classes/FlgtManager!flightservice.facade.FlgtManagerLocal";
 
     public FlgtManagerTest() {
     }
@@ -45,12 +45,14 @@ public class FlgtManagerTest {
     }
 
     /**
-     * Test of isArrival method, of class FlgtManager.
+     * Test of isArrival method, of class FlgtManager. The FlgtRoute is ordered by seqNo.
+     *
+     * @throws java.lang.Exception on any exception
      */
     @Test
     public void testIsArrival() throws Exception {
         System.out.println("isArrival");
-        FlgtManagerLocal flgtManager = (FlgtManagerLocal) ctx.lookup(jndiName);
+        FlgtManagerLocal flgtManager = (FlgtManagerLocal) ctx.lookup(LOCAL_JNDI_NAME);
         FlgtSgmt sgmt;
         sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 85", "20190109")).get(1);
         assertEquals(true, flgtManager.isArrival(sgmt));
@@ -67,42 +69,50 @@ public class FlgtManagerTest {
         assertEquals(false, flgtManager.isArrival(sgmt));
         sgmt = flgtManager.getFlgtRoute(new FlgtPK("SN 467", "20190109")).get(0);
         assertEquals(false, flgtManager.isArrival(sgmt));
-
-        sgmt = flgtManager.getFlgtRoute(new FlgtPK("SN 467", "20190109")).get(1);
-        assertEquals(true, flgtManager.isArrival(sgmt));
-        sgmt = flgtManager.getFlgtRoute(new FlgtPK("SN 467", "20190109")).get(0);
-        assertEquals(false, flgtManager.isArrival(sgmt));
     }
 
     /**
-     * Test of isDeparture method, of class FlgtManager.
+     * Test of isDeparture method, of class FlgtManager. The FlgtRoute is ordered by seqNo.
+     *
+     * @throws java.lang.Exception on any exception
      */
     @Test
     public void testIsDeparture() throws Exception {
         System.out.println("isDeparture");
-        FlgtManagerLocal flgtManager = (FlgtManagerLocal) ctx.lookup(jndiName);
+        FlgtManagerLocal flgtManager = (FlgtManagerLocal) ctx.lookup(LOCAL_JNDI_NAME);
         FlgtSgmt sgmt;
         sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 85", "20190109")).get(0);
         assertEquals(true, flgtManager.isDeparture(sgmt));
         sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 9994", "20190109")).get(0);
+        assertEquals(true, flgtManager.isDeparture(sgmt));
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("SN 467", "20190109")).get(0);
+        assertEquals(true, flgtManager.isDeparture(sgmt));
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("SN 467", "20190109")).get(1);
         assertEquals(true, flgtManager.isDeparture(sgmt));
 
         sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 85", "20190109")).get(1);
         assertEquals(false, flgtManager.isDeparture(sgmt));
         sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 9994", "20190109")).get(1);
         assertEquals(false, flgtManager.isDeparture(sgmt));
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("SN 467", "20190109")).get(2);
+        assertEquals(false, flgtManager.isDeparture(sgmt));
     }
 
     /**
      * Test of isPaxFlight method, of class FlgtManager.
+     *
+     * @throws java.lang.Exception on any exception
      */
     @Test
     public void testIsPaxFlight() throws Exception {
         System.out.println("isPaxFlight");
-        FlgtManagerLocal flgtManager = (FlgtManagerLocal) ctx.lookup(jndiName);
+        FlgtManagerLocal flgtManager = (FlgtManagerLocal) ctx.lookup(LOCAL_JNDI_NAME);
         Flgt flgt;
         flgt = flgtManager.getById(new FlgtPK("EK 85", "20190109"));
         assertEquals(true, flgtManager.isPaxFlight(flgt));
+        flgt = flgtManager.getById(new FlgtPK("SN 467", "20190109"));
+        assertEquals(true, flgtManager.isPaxFlight(flgt));
+
         flgt = flgtManager.getById(new FlgtPK("EK 9994", "20190109"));
         assertEquals(false, flgtManager.isPaxFlight(flgt));
     }
