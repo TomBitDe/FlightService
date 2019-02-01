@@ -9,7 +9,9 @@ import flightservice.model.FlgtSgmt;
 import flightservice.model.FlgtSgmtSchedule;
 import flightservice.model.FlgtStatus;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
@@ -324,18 +326,19 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
 
         arrival.setFlgtNo(sgmtSchedule.getFlgtSgmtPK().getFlgtPK().getFlgtNo());
         arrival.setArpo(sgmtSchedule.getFlgtSgmtPK().getArpo());
-        arrival.setSchedFlgtDt(sgmtSchedule.getSat());
+        arrival.setSchedFlgtDt(convert2String(sgmtSchedule.getSat(), "HH:mm:ss"));
 
         if (sgmtSchedule.getFlgtSgmt().getFlgtStatus() == FlgtStatus.Arrived) {
             // Set the touchdown time
-            arrival.setExpected(sgmtSchedule.getTdt());
+            arrival.setExpected(convert2String(sgmtSchedule.getTdt(), "HH:mm:ss"));
         }
         else {
             // Set the estimated arrival time
-            arrival.setExpected(sgmtSchedule.getEat());
+            arrival.setExpected(convert2String(sgmtSchedule.getEat(), "HH:mm:ss"));
         }
 
         arrival.setComments(buildComments(sgmtSchedule));
+        arrival.setUpdated(convert2String(new Timestamp(System.currentTimeMillis()), "yyyyMMddHHmmssS"));
 
         arrival.setPaxExit(sgmtSchedule.getFlgtSgmt().getPaxExit());
 
@@ -354,9 +357,10 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
 
         departure.setFlgtNo(sgmtSchedule.getFlgtSgmtPK().getFlgtPK().getFlgtNo());
         departure.setArpo(sgmtSchedule.getFlgtSgmtPK().getArpo());
-        departure.setSchedFlgtDt(sgmtSchedule.getSat());
-        departure.setExpected(sgmtSchedule.getEdt());
+        departure.setSchedFlgtDt(convert2String(sgmtSchedule.getSat(), "HH:mm:ss"));
+        departure.setExpected(convert2String(sgmtSchedule.getEdt(), "HH:mm:ss"));
         departure.setComments(buildComments(sgmtSchedule));
+        departure.setUpdated(convert2String(new Timestamp(System.currentTimeMillis()), "yyyyMMddHHmmssS"));
 
         departure.setGate(sgmtSchedule.getFlgtSgmt().getGate());
 
@@ -376,5 +380,21 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
         String ret = sgmtSchedule.getFlgtSgmt().getFlgtStatus().toString();
 
         return ret;
+    }
+
+    /**
+     * Convert a Timestamp to a String using the given format.
+     *
+     * @param ts  the timestamp
+     * @param fmt the format to use for conversion
+     *
+     * @return the resulting string
+     */
+    private String convert2String(Timestamp ts, String fmt) {
+        Date date = new Date();
+        date.setTime(ts.getTime());
+        String formattedDate = new SimpleDateFormat(fmt).format(date);
+
+        return formattedDate;
     }
 }

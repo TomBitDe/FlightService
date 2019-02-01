@@ -1,8 +1,6 @@
 package service;
 
-import flightservice.boundary.ArrivalListVO;
 import flightservice.boundary.ArrivalVO;
-import flightservice.boundary.DepartureListVO;
 import flightservice.boundary.DepartureVO;
 import flightservice.boundary.FlgtListVO;
 import flightservice.boundary.FlgtManagerRemote;
@@ -20,6 +18,7 @@ import javax.ws.rs.OPTIONS;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -160,14 +159,11 @@ public class FlightService {
         // Get the ArrivalVOs from the remote call as a List
         List<ArrivalVO> paxArrivalList = flightMangerRemote.getPaxFlightArrivals(arpo, tsStartEat, intCount);
 
-        // Prepare to make an ArrivalListVO from arrivalList for display
-        ArrivalListVO paxArrivalListVO = new ArrivalListVO();
+        GenericEntity<List<ArrivalVO>> entity
+                = new GenericEntity<List<ArrivalVO>>(new ArrayList(paxArrivalList)) {
+        };
 
-        if (paxArrivalList != null) {
-            paxArrivalListVO.setArrivalList(paxArrivalList);
-        }
-
-        Response response = Response.ok().entity(paxArrivalListVO).build();
+        Response response = Response.ok(entity).build();
 
         return response;
     }
@@ -192,14 +188,11 @@ public class FlightService {
         // Get the DepartureVOs from the remote call as a List
         List<DepartureVO> paxDepartureList = flightMangerRemote.getPaxFlightDepartures(arpo, tsStartEdt, intCount);
 
-        // Prepare to make an DepartureListVO from departureList for display
-        DepartureListVO paxDepartureListVO = new DepartureListVO();
+        GenericEntity<List<DepartureVO>> entity
+                = new GenericEntity<List<DepartureVO>>(new ArrayList(paxDepartureList)) {
+        };
 
-        if (paxDepartureList != null) {
-            paxDepartureListVO.setDepartureList(paxDepartureList);
-        }
-
-        Response response = Response.ok().entity(paxDepartureListVO).build();
+        Response response = Response.ok(entity).build();
 
         return response;
     }
@@ -224,14 +217,11 @@ public class FlightService {
         // Get the ArrivalVOs from the remote call as a List
         List<ArrivalVO> arrivalList = flightMangerRemote.getArrivals(arpo, tsStartEat, intCount);
 
-        // Prepare to make an ArrivalListVO from arrivalList for display
-        ArrivalListVO arrivalListVO = new ArrivalListVO();
+        GenericEntity<List<ArrivalVO>> entity
+                = new GenericEntity<List<ArrivalVO>>(new ArrayList(arrivalList)) {
+        };
 
-        if (arrivalList != null) {
-            arrivalListVO.setArrivalList(arrivalList);
-        }
-
-        Response response = Response.ok().entity(arrivalListVO).build();
+        Response response = Response.ok(entity).build();
 
         return response;
     }
@@ -256,14 +246,11 @@ public class FlightService {
         // Get the DepartureVOs from the remote call as a List
         List<DepartureVO> departureList = flightMangerRemote.getDepartures(arpo, tsStartEdt, intCount);
 
-        // Prepare to make an DepartureListVO from departureList for display
-        DepartureListVO departureListVO = new DepartureListVO();
+        GenericEntity<List<DepartureVO>> entity
+                = new GenericEntity<List<DepartureVO>>(new ArrayList(departureList)) {
+        };
 
-        if (departureList != null) {
-            departureListVO.setDepartureList(departureList);
-        }
-
-        Response response = Response.ok().entity(departureListVO).build();
+        Response response = Response.ok(entity).build();
 
         return response;
     }

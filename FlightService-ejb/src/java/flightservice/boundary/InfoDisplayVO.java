@@ -1,7 +1,6 @@
 package flightservice.boundary;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Objects;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -13,11 +12,11 @@ public class InfoDisplayVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String flgtNo;
-    private Timestamp schedFlgtDt;
+    private String schedFlgtDt;
     private String arpo;
-    private Timestamp expected;
+    private String expected;
     private String comments;
-    private Timestamp updated = new Timestamp(System.currentTimeMillis());
+    private String updated;
 
     public InfoDisplayVO() {
     }
@@ -30,11 +29,11 @@ public class InfoDisplayVO implements Serializable {
         this.flgtNo = flgtNo;
     }
 
-    public Timestamp getSchedFlgtDt() {
+    public String getSchedFlgtDt() {
         return schedFlgtDt;
     }
 
-    public void setSchedFlgtDt(Timestamp schedFlgtDt) {
+    public void setSchedFlgtDt(String schedFlgtDt) {
         this.schedFlgtDt = schedFlgtDt;
     }
 
@@ -46,11 +45,11 @@ public class InfoDisplayVO implements Serializable {
         this.arpo = arpo;
     }
 
-    public Timestamp getExpected() {
+    public String getExpected() {
         return expected;
     }
 
-    public void setExpected(Timestamp expected) {
+    public void setExpected(String expected) {
         this.expected = expected;
     }
 
@@ -62,11 +61,11 @@ public class InfoDisplayVO implements Serializable {
         this.comments = comments;
     }
 
-    public Timestamp getUpdated() {
+    public String getUpdated() {
         return updated;
     }
 
-    public void setUpdated(Timestamp updated) {
+    public void setUpdated(String updated) {
         this.updated = updated;
     }
 
