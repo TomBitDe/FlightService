@@ -2,6 +2,8 @@ package flightservice.boundary;
 
 import flightservice.model.Flgt;
 import flightservice.model.FlgtPK;
+import com.home.flightservice.boundary.ArrivalVO;
+import com.home.flightservice.boundary.DepartureVO;
 import java.sql.Timestamp;
 import java.util.List;
 import javax.ejb.Remote;

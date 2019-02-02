@@ -1,11 +1,11 @@
-package flightservice.boundary;
+package com.home.flightservice.boundary;
 
 import java.io.Serializable;
 import java.util.Objects;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Info dislay Value Object.
+ * Info display Value Object.
  */
 @XmlRootElement(name = "InfoDisplayVO")
 public class InfoDisplayVO implements Serializable {

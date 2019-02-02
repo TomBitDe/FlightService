@@ -1,13 +1,13 @@
 package flightservice.facade;
 
-import flightservice.boundary.ArrivalVO;
-import flightservice.boundary.DepartureVO;
 import flightservice.boundary.FlgtManagerRemote;
 import flightservice.model.Flgt;
 import flightservice.model.FlgtPK;
 import flightservice.model.FlgtSgmt;
 import flightservice.model.FlgtSgmtSchedule;
 import flightservice.model.FlgtStatus;
+import com.home.flightservice.boundary.ArrivalVO;
+import com.home.flightservice.boundary.DepartureVO;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

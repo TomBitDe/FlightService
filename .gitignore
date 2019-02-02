@@ -5,3 +5,9 @@
 /FlightService-ejb/dist/
 /FlightService-war/build/
 /FlightService-war/dist/
+/FlightService-api/nbproject/private/
+/FlightService-api/build/
+/FlightService-api/dist/
+/FlightService-api_OLD/build/
+/FlightService-api_OLD/dist/
+/FlightService-api_OLD/nbproject/private/

@@ -1,4 +1,4 @@
-package flightservice.boundary;
+package com.home.flightservice.boundary;
 
 import java.io.Serializable;
 import java.util.Objects;

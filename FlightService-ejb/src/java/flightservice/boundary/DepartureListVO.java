@@ -1,5 +1,6 @@
 package flightservice.boundary;
 
+import com.home.flightservice.boundary.DepartureVO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

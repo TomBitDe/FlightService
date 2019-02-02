@@ -1,12 +1,12 @@
 package service;
 
-import flightservice.boundary.ArrivalVO;
-import flightservice.boundary.DepartureVO;
 import flightservice.boundary.FlgtListVO;
 import flightservice.boundary.FlgtManagerRemote;
 import flightservice.boundary.FlgtVO;
 import flightservice.model.Flgt;
 import flightservice.model.FlgtPK;
+import com.home.flightservice.boundary.ArrivalVO;
+import com.home.flightservice.boundary.DepartureVO;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
