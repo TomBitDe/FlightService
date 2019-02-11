@@ -37,7 +37,7 @@ public interface FlgtManagerLocal {
     public List<FlgtSgmt> getFlgtRoute(FlgtPK id);
 
     /**
-     * Check if a flight segment is an arrival segment
+     * Check if a flight segment is an arrival segment.
      *
      * @param sgmt the flight segment
      *
@@ -46,7 +46,7 @@ public interface FlgtManagerLocal {
     public boolean isArrival(FlgtSgmt sgmt);
 
     /**
-     * Check if a flight segment is a departure segment
+     * Check if a flight segment is a departure segment.
      *
      * @param sgmt the flight segment
      *
@@ -55,7 +55,7 @@ public interface FlgtManagerLocal {
     public boolean isDeparture(FlgtSgmt sgmt);
 
     /**
-     * Get the origin airport for an arrival flight
+     * Get the origin airport for an arrival flight.
      *
      * @param sgmt the arrival flight segment to check for
      *
@@ -64,7 +64,7 @@ public interface FlgtManagerLocal {
     public String getOriginForArrival(FlgtSgmt sgmt);
 
     /**
-     * Check if a flight is a passenger flight
+     * Check if a flight is a passenger flight.
      *
      * @param flgt the flight to check
      *
