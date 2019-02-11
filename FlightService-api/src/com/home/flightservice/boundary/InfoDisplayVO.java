@@ -5,7 +5,9 @@ import java.util.Objects;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Info display Value Object.
+ * Info display Value Object.<br>
+ * <br>
+ * Values that are common for flight information display.
  */
 @XmlRootElement(name = "InfoDisplayVO")
 public class InfoDisplayVO implements Serializable {

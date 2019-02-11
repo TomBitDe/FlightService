@@ -5,7 +5,9 @@ import java.util.Objects;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Departure info display Value Object.
+ * Departure info display Value Object.<br>
+ * <br>
+ * Values that are special for departure flights display.
  */
 @XmlRootElement(name = "DepartureVO")
 public class DepartureVO extends InfoDisplayVO implements Serializable {

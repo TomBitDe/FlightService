@@ -5,7 +5,9 @@ import java.util.Objects;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Arrival info display Value Object.
+ * Arrival info display Value Object.<br>
+ * <br>
+ * Values that are special for arrival flights display.
  */
 @XmlRootElement(name = "ArrivalVO")
 public class ArrivalVO extends InfoDisplayVO implements Serializable {
