@@ -11,10 +11,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ArrivalVO extends InfoDisplayVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private String originArpo;
     private String paxExit;
 
     public ArrivalVO() {
         super();
+    }
+
+    public String getOriginArpo() {
+        return originArpo;
+    }
+
+    public void setOriginArpo(String originArpo) {
+        this.originArpo = originArpo;
     }
 
     public String getPaxExit() {
@@ -28,7 +37,8 @@ public class ArrivalVO extends InfoDisplayVO implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 37 * hash + Objects.hashCode(this.paxExit);
+        hash = 23 * hash + Objects.hashCode(this.originArpo);
+        hash = 23 * hash + Objects.hashCode(this.paxExit);
         return hash;
     }
 
@@ -44,6 +54,9 @@ public class ArrivalVO extends InfoDisplayVO implements Serializable {
             return false;
         }
         final ArrivalVO other = (ArrivalVO) obj;
+        if (!Objects.equals(this.originArpo, other.originArpo)) {
+            return false;
+        }
         if (!Objects.equals(this.paxExit, other.paxExit)) {
             return false;
         }
@@ -52,6 +65,6 @@ public class ArrivalVO extends InfoDisplayVO implements Serializable {
 
     @Override
     public String toString() {
-        return "ArrivalVO{" + super.toString() + ", paxExit=" + paxExit + '}';
+        return "ArrivalVO{" + super.toString() + ", originArpo=" + originArpo + ", paxExit=" + paxExit + '}';
     }
 }
