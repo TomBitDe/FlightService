@@ -1,13 +1,13 @@
 package flightservice.facade;
 
+import com.home.flightservice.boundary.ArrivalVO;
+import com.home.flightservice.boundary.DepartureVO;
 import flightservice.boundary.FlgtManagerRemote;
 import flightservice.model.Flgt;
 import flightservice.model.FlgtPK;
 import flightservice.model.FlgtSgmt;
 import flightservice.model.FlgtSgmtSchedule;
 import flightservice.model.FlgtStatus;
-import com.home.flightservice.boundary.ArrivalVO;
-import com.home.flightservice.boundary.DepartureVO;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -340,6 +340,7 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
         arrival.setComments(buildComments(sgmtSchedule));
         arrival.setUpdated(convert2String(new Timestamp(System.currentTimeMillis()), "yyyyMMddHHmmssS"));
 
+        arrival.setOriginArpo(getOriginForArrival(sgmtSchedule.getFlgtSgmt()));
         arrival.setPaxExit(sgmtSchedule.getFlgtSgmt().getPaxExit());
 
         return arrival;
@@ -367,6 +368,30 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
         departure.setCheckinCounter(sgmtSchedule.getFlgtSgmt().getCheckinCounter());
 
         return departure;
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public String getOriginForArrival(FlgtSgmt sgmt) {
+        if (sgmt == null) {
+            throw new IllegalArgumentException("sgmt == null");
+        }
+
+        System.out.println("Find sgmt for flgt " + sgmt.getFlgtSgmtPK().getFlgtPK().toString() + " with seqNo < " + sgmt.getSeqNo());
+
+        String ret = "Unknown";
+
+        // Fetch the segments for this flight with a lesser seqNo
+        Query query = em.createQuery("select s.flgtSgmtPK.arpo FROM FLGTSGMT s WHERE s.flgtSgmtPK.flgtPK = :flgtPK and s.seqNo < :seqNo ORDER BY s.seqNo DESC");
+        query.setParameter("flgtPK", sgmt.getFlgtSgmtPK().getFlgtPK()).setParameter("seqNo", sgmt.getSeqNo());
+        // Check the fetched list
+        List<String> originList = query.getResultList();
+        for (String origin : originList) {
+            ret = origin;
+            break;
+        }
+
+        return ret;
     }
 
     /**

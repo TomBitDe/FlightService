@@ -116,4 +116,13 @@ public class FlgtManagerTest {
         flgt = flgtManager.getById(new FlgtPK("EK 9994", "20190109"));
         assertEquals(false, flgtManager.isPaxFlight(flgt));
     }
+
+    @Test
+    public void testGetOriginForArrival() throws Exception {
+        System.out.println("getOriginForArrival");
+        FlgtManagerLocal flgtManager = (FlgtManagerLocal) ctx.lookup(LOCAL_JNDI_NAME);
+        FlgtSgmt sgmt;
+        sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 85", "20190109")).get(1);
+        assertEquals("DXB", flgtManager.getOriginForArrival(sgmt));
+    }
 }

@@ -55,6 +55,15 @@ public interface FlgtManagerLocal {
     public boolean isDeparture(FlgtSgmt sgmt);
 
     /**
+     * Get the origin airport for an arrival flight
+     *
+     * @param sgmt the arrival flight segment to check for
+     *
+     * @return the airport code in case of an arrival flight else the value "Unknown"
+     */
+    public String getOriginForArrival(FlgtSgmt sgmt);
+
+    /**
      * Check if a flight is a passenger flight
      *
      * @param flgt the flight to check
