@@ -147,70 +147,7 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
         return flgt;
     }
 
-    @Override
-    public List<ArrivalVO> getPaxFlightArrivals(String arpo, Timestamp startEat, int count) {
-        if (count < 1) {
-            throw new IllegalArgumentException("count < 1");
-        }
-
-        LOG.log(Level.FINER, "Search max [{0}] PAX ARRIVALS for [{1}] [{2}]", new Object[]{count, arpo, startEat});
-
-        Query query = em.createQuery("select s FROM FLGTSGMTSCHEDULE s WHERE s.flgtSgmtPK.arpo = :arpo and s.eat >= :startEat ORDER BY s.eat");
-        query.setParameter("arpo", arpo).setParameter("startEat", startEat);
-        query.setMaxResults(count);
-        List<FlgtSgmtSchedule> sgmtScheduleList = query.getResultList();
-
-        LOG.log(Level.FINER, "Found [{0}] sgmt schedule(s)", sgmtScheduleList.size());
-
-        List<ArrivalVO> arrivalList = new ArrayList<>();
-        for (FlgtSgmtSchedule sgmtSchedule : sgmtScheduleList) {
-            if (isArrival(sgmtSchedule.getFlgtSgmt()) && isPaxFlight(sgmtSchedule.getFlgtSgmt().getFlgt())) {
-                ArrivalVO arrival = buildArrivalVO(sgmtSchedule);
-
-                arrivalList.add(arrival);
-                LOG.finer(arrival.toString());
-            }
-        }
-
-        return arrivalList;
-    }
-
-    @Override
-    public List<DepartureVO> getPaxFlightDepartures(String arpo, Timestamp startEdt, int count) {
-        if (count < 1) {
-            throw new IllegalArgumentException("count < 1");
-        }
-
-        LOG.log(Level.FINER, "Search max [{0}] PAX DEPARTURES for [{1}] [{2}]", new Object[]{count, arpo, startEdt});
-
-        Query query = em.createQuery("select s FROM FLGTSGMTSCHEDULE s WHERE s.flgtSgmtPK.arpo = :arpo and s.eat >= :startEdt ORDER BY s.eat");
-        query.setParameter("arpo", arpo).setParameter("startEdt", startEdt);
-        query.setMaxResults(count);
-        List<FlgtSgmtSchedule> sgmtScheduleList = query.getResultList();
-
-        LOG.log(Level.FINER, "Found [{0}] sgmt schedule(s)", sgmtScheduleList.size());
-
-        List<DepartureVO> departureList = new ArrayList<>();
-        for (FlgtSgmtSchedule sgmtSchedule : sgmtScheduleList) {
-            if (isDeparture(sgmtSchedule.getFlgtSgmt()) && isPaxFlight(sgmtSchedule.getFlgtSgmt().getFlgt())) {
-                DepartureVO departure = buildDepartureVO(sgmtSchedule);
-
-                departureList.add(departure);
-                LOG.finer(departure.toString());
-            }
-        }
-
-        return departureList;
-    }
-
-    @Override
-    public List<ArrivalVO> getArrivals(String arpo, Timestamp startEat, int count) {
-        if (count < 1) {
-            throw new IllegalArgumentException("count < 1");
-        }
-
-        LOG.log(Level.FINER, "Search max [{0}] ARRIVALS for [{1}] [{2}]", new Object[]{count, arpo, startEat});
-
+    private List<FlgtSgmtSchedule> getFlgtSgmtsForArrival(String arpo, Timestamp startEat, int count) {
         // Select EAT (Expected Arrival Time)     FlgtStatus OnTime, Delayed, Canceled, Taxiing, Arrived, Unknown
         String qStr = "select s FROM FLGTSGMTSCHEDULE s"
                 + " WHERE s.flgtSgmtPK.arpo = :arpo"
@@ -234,29 +171,10 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
         query.setMaxResults(count);
         List<FlgtSgmtSchedule> sgmtScheduleList = query.getResultList();
 
-        LOG.log(Level.FINER, "Found [{0}] sgmt schedule(s)", sgmtScheduleList.size());
-
-        List<ArrivalVO> arrivalList = new ArrayList<>();
-        for (FlgtSgmtSchedule sgmtSchedule : sgmtScheduleList) {
-            if (isArrival(sgmtSchedule.getFlgtSgmt())) {
-                ArrivalVO arrival = buildArrivalVO(sgmtSchedule);
-
-                arrivalList.add(arrival);
-                LOG.finer(arrival.toString());
-            }
-        }
-
-        return arrivalList;
+        return sgmtScheduleList;
     }
 
-    @Override
-    public List<DepartureVO> getDepartures(String arpo, Timestamp startEdt, int count) {
-        if (count < 1) {
-            throw new IllegalArgumentException("count < 1");
-        }
-
-        LOG.log(Level.FINER, "Search max [{0}] DEPARTURES for [{1}] [{2}]", new Object[]{count, arpo, startEdt});
-
+    private List<FlgtSgmtSchedule> getFlgtSgmtsForDeparture(String arpo, Timestamp startEdt, int count) {
         String qStr = "select s FROM FLGTSGMTSCHEDULE s"
                 + " WHERE s.flgtSgmtPK.arpo = :arpo"
                 + " and s.edt >= :startEdt"
@@ -280,8 +198,100 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
         query.setMaxResults(count);
         List<FlgtSgmtSchedule> sgmtScheduleList = query.getResultList();
 
+        return sgmtScheduleList;
+    }
+
+    @Override
+    public List<ArrivalVO> getPaxFlightArrivals(String arpo, Timestamp startEat, int count) {
+        if (count < 1) {
+            throw new IllegalArgumentException("count < 1");
+        }
+
+        LOG.log(Level.FINER, "Search max [{0}] PAX ARRIVALS for [{1}] [{2}]", new Object[]{count, arpo, startEat});
+
+        List<FlgtSgmtSchedule> sgmtScheduleList = getFlgtSgmtsForArrival(arpo, startEat, count);
+
         LOG.log(Level.FINER, "Found [{0}] sgmt schedule(s)", sgmtScheduleList.size());
 
+        // Filter for arrival and pax
+        List<ArrivalVO> arrivalList = new ArrayList<>();
+        for (FlgtSgmtSchedule sgmtSchedule : sgmtScheduleList) {
+            if (isArrival(sgmtSchedule.getFlgtSgmt()) && isPaxFlight(sgmtSchedule.getFlgtSgmt().getFlgt())) {
+                ArrivalVO arrival = buildArrivalVO(sgmtSchedule);
+
+                arrivalList.add(arrival);
+                LOG.finer(arrival.toString());
+            }
+        }
+
+        return arrivalList;
+    }
+
+    @Override
+    public List<DepartureVO> getPaxFlightDepartures(String arpo, Timestamp startEdt, int count) {
+        if (count < 1) {
+            throw new IllegalArgumentException("count < 1");
+        }
+
+        LOG.log(Level.FINER, "Search max [{0}] PAX DEPARTURES for [{1}] [{2}]", new Object[]{count, arpo, startEdt});
+
+        List<FlgtSgmtSchedule> sgmtScheduleList = getFlgtSgmtsForDeparture(arpo, startEdt, count);
+
+        LOG.log(Level.FINER, "Found [{0}] sgmt schedule(s)", sgmtScheduleList.size());
+
+        // Filter for departure and pax
+        List<DepartureVO> departureList = new ArrayList<>();
+        for (FlgtSgmtSchedule sgmtSchedule : sgmtScheduleList) {
+            if (isDeparture(sgmtSchedule.getFlgtSgmt()) && isPaxFlight(sgmtSchedule.getFlgtSgmt().getFlgt())) {
+                DepartureVO departure = buildDepartureVO(sgmtSchedule);
+
+                departureList.add(departure);
+                LOG.finer(departure.toString());
+            }
+        }
+
+        return departureList;
+    }
+
+    @Override
+    public List<ArrivalVO> getArrivals(String arpo, Timestamp startEat, int count) {
+        if (count < 1) {
+            throw new IllegalArgumentException("count < 1");
+        }
+
+        LOG.log(Level.FINER, "Search max [{0}] ARRIVALS for [{1}] [{2}]", new Object[]{count, arpo, startEat});
+
+        List<FlgtSgmtSchedule> sgmtScheduleList = getFlgtSgmtsForArrival(arpo, startEat, count);
+
+        LOG.log(Level.FINER, "Found [{0}] sgmt schedule(s)", sgmtScheduleList.size());
+
+        // Filter for arrival
+        List<ArrivalVO> arrivalList = new ArrayList<>();
+        for (FlgtSgmtSchedule sgmtSchedule : sgmtScheduleList) {
+            if (isArrival(sgmtSchedule.getFlgtSgmt())) {
+                ArrivalVO arrival = buildArrivalVO(sgmtSchedule);
+
+                arrivalList.add(arrival);
+                LOG.finer(arrival.toString());
+            }
+        }
+
+        return arrivalList;
+    }
+
+    @Override
+    public List<DepartureVO> getDepartures(String arpo, Timestamp startEdt, int count) {
+        if (count < 1) {
+            throw new IllegalArgumentException("count < 1");
+        }
+
+        LOG.log(Level.FINER, "Search max [{0}] DEPARTURES for [{1}] [{2}]", new Object[]{count, arpo, startEdt});
+
+        List<FlgtSgmtSchedule> sgmtScheduleList = getFlgtSgmtsForDeparture(arpo, startEdt, count);
+
+        LOG.log(Level.FINER, "Found [{0}] sgmt schedule(s)", sgmtScheduleList.size());
+
+        // Filter for departure
         List<DepartureVO> departureList = new ArrayList<>();
         for (FlgtSgmtSchedule sgmtSchedule : sgmtScheduleList) {
             if (isDeparture(sgmtSchedule.getFlgtSgmt())) {
