@@ -211,8 +211,26 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
 
         LOG.log(Level.FINER, "Search max [{0}] ARRIVALS for [{1}] [{2}]", new Object[]{count, arpo, startEat});
 
-        Query query = em.createQuery("select s FROM FLGTSGMTSCHEDULE s WHERE s.flgtSgmtPK.arpo = :arpo and s.eat >= :startEat ORDER BY s.eat");
-        query.setParameter("arpo", arpo).setParameter("startEat", startEat);
+        // Select EAT (Expected Arrival Time)     FlgtStatus OnTime, Delayed, Canceled, Taxiing, Arrived, Unknown
+        String qStr = "select s FROM FLGTSGMTSCHEDULE s"
+                + " WHERE s.flgtSgmtPK.arpo = :arpo"
+                + " and s.eat >= :startEat"
+                + " and (    s.flgtSgmt.flgtStatus = :status1"
+                + "       or s.flgtSgmt.flgtStatus = :status2"
+                + "       or s.flgtSgmt.flgtStatus = :status3"
+                + "       or s.flgtSgmt.flgtStatus = :status4"
+                + "       or s.flgtSgmt.flgtStatus = :status5"
+                + "       or s.flgtSgmt.flgtStatus = :status6"
+                + ") ORDER BY s.eat";
+        Query query = em.createQuery(qStr);
+        query.setParameter("arpo", arpo)
+                .setParameter("startEat", startEat)
+                .setParameter("status1", FlgtStatus.Canceled)
+                .setParameter("status2", FlgtStatus.OnTime)
+                .setParameter("status3", FlgtStatus.Delayed)
+                .setParameter("status4", FlgtStatus.Taxiing)
+                .setParameter("status5", FlgtStatus.Arrived)
+                .setParameter("status6", FlgtStatus.Unknown);
         query.setMaxResults(count);
         List<FlgtSgmtSchedule> sgmtScheduleList = query.getResultList();
 
@@ -239,8 +257,26 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
 
         LOG.log(Level.FINER, "Search max [{0}] DEPARTURES for [{1}] [{2}]", new Object[]{count, arpo, startEdt});
 
-        Query query = em.createQuery("select s FROM FLGTSGMTSCHEDULE s WHERE s.flgtSgmtPK.arpo = :arpo and s.eat >= :startEdt ORDER BY s.eat");
-        query.setParameter("arpo", arpo).setParameter("startEdt", startEdt);
+        String qStr = "select s FROM FLGTSGMTSCHEDULE s"
+                + " WHERE s.flgtSgmtPK.arpo = :arpo"
+                + " and s.edt >= :startEdt"
+                + " and (    s.flgtSgmt.flgtStatus = :status1"
+                + "       or s.flgtSgmt.flgtStatus = :status2"
+                + "       or s.flgtSgmt.flgtStatus = :status3"
+                + "       or s.flgtSgmt.flgtStatus = :status4"
+                + "       or s.flgtSgmt.flgtStatus = :status5"
+                + "       or s.flgtSgmt.flgtStatus = :status6"
+                + ") ORDER BY s.edt";
+        Query query = em.createQuery(qStr);
+        query.setParameter("arpo", arpo)
+                .setParameter("startEdt", startEdt)
+                .setParameter("status1", FlgtStatus.Canceled)
+                .setParameter("status2", FlgtStatus.Boarding)
+                .setParameter("status3", FlgtStatus.EndOfBoarding)
+                .setParameter("status4", FlgtStatus.Taxiing)
+                .setParameter("status5", FlgtStatus.Departed)
+                .setParameter("status6", FlgtStatus.Unknown);
+
         query.setMaxResults(count);
         List<FlgtSgmtSchedule> sgmtScheduleList = query.getResultList();
 
@@ -330,7 +366,8 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
         arrival.setArpo(sgmtSchedule.getFlgtSgmtPK().getArpo());
         arrival.setSchedFlgtDt(convert2String(sgmtSchedule.getSat(), "HH:mm:ss"));
 
-        if (sgmtSchedule.getFlgtSgmt().getFlgtStatus() == FlgtStatus.Arrived) {
+        if (sgmtSchedule.getFlgtSgmt().getFlgtStatus() == FlgtStatus.Arrived
+                || sgmtSchedule.getFlgtSgmt().getFlgtStatus() == FlgtStatus.Taxiing) {
             // Set the touchdown time
             arrival.setExpected(convert2String(sgmtSchedule.getTdt(), "HH:mm:ss"));
         }
