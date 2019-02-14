@@ -3,6 +3,7 @@ package flightservice.facade;
 import flightservice.model.Flgt;
 import flightservice.model.FlgtPK;
 import flightservice.model.FlgtSgmt;
+import java.util.logging.Logger;
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.Context;
 import org.junit.After;
@@ -16,6 +17,7 @@ import org.junit.Test;
  * Tests for the FlgtManager implementation
  */
 public class FlgtManagerTest {
+    private static final Logger LOG = Logger.getLogger(FlgtManagerTest.class.getName());
     private static EJBContainer ejbContainer;
     private static Context ctx;
     private static final String LOCAL_JNDI_NAME = "java:global/classes/FlgtManager!flightservice.facade.FlgtManagerLocal";
@@ -26,14 +28,14 @@ public class FlgtManagerTest {
     @BeforeClass
     public static void setUpClass() {
         ejbContainer = EJBContainer.createEJBContainer();
-        System.out.println("Starting the container");
+        LOG.info("Starting the container");
         ctx = ejbContainer.getContext();
     }
 
     @AfterClass
     public static void tearDownClass() {
         ejbContainer.close();
-        System.out.println("Closing the container");
+        LOG.info("Closing the container");
     }
 
     @Before
@@ -51,7 +53,7 @@ public class FlgtManagerTest {
      */
     @Test
     public void testIsArrival() throws Exception {
-        System.out.println("isArrival");
+        LOG.info("isArrival");
         FlgtManagerLocal flgtManager = (FlgtManagerLocal) ctx.lookup(LOCAL_JNDI_NAME);
         FlgtSgmt sgmt;
         sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 85", "20190109")).get(1);
@@ -78,7 +80,7 @@ public class FlgtManagerTest {
      */
     @Test
     public void testIsDeparture() throws Exception {
-        System.out.println("isDeparture");
+        LOG.info("isDeparture");
         FlgtManagerLocal flgtManager = (FlgtManagerLocal) ctx.lookup(LOCAL_JNDI_NAME);
         FlgtSgmt sgmt;
         sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 85", "20190109")).get(0);
@@ -105,7 +107,7 @@ public class FlgtManagerTest {
      */
     @Test
     public void testIsPaxFlight() throws Exception {
-        System.out.println("isPaxFlight");
+        LOG.info("isPaxFlight");
         FlgtManagerLocal flgtManager = (FlgtManagerLocal) ctx.lookup(LOCAL_JNDI_NAME);
         Flgt flgt;
         flgt = flgtManager.getById(new FlgtPK("EK 85", "20190109"));
@@ -119,7 +121,7 @@ public class FlgtManagerTest {
 
     @Test
     public void testGetOriginForArrival() throws Exception {
-        System.out.println("getOriginForArrival");
+        LOG.info("getOriginForArrival");
         FlgtManagerLocal flgtManager = (FlgtManagerLocal) ctx.lookup(LOCAL_JNDI_NAME);
         FlgtSgmt sgmt;
         sgmt = flgtManager.getFlgtRoute(new FlgtPK("EK 85", "20190109")).get(1);

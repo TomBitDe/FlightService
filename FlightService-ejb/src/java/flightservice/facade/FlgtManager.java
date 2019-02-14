@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
@@ -21,14 +23,13 @@ import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import org.jboss.logging.Logger;
 
 /**
  * Implementation of flight master data operations.
  */
 @Stateless
 public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
-    private static final Logger LOG = Logger.getLogger(FlgtManager.class);
+    private static final Logger LOG = Logger.getLogger(FlgtManager.class.getName());
 
     @Resource
     SessionContext ctx;
@@ -39,9 +40,9 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
     @Override
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public List<Flgt> getFlgts() {
-        System.out.println("Get all flights");
+        LOG.finer("Get all flights");
         List<Flgt> flgtList = em.createQuery("select f FROM FLGT f").getResultList();
-        System.out.println("Return [" + flgtList.size() + "] flight(s)");
+        LOG.log(Level.FINER, "Return [{0}] flight(s)", flgtList.size());
 
         return flgtList;
     }
@@ -52,15 +53,15 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
         if (id == null || id.getFlgtNo().isEmpty() || id.getSchedFlgtDt().isEmpty()) {
             throw new IllegalArgumentException("id is invalid");
         }
-        System.out.println("Search for " + id.toString());
+        LOG.log(Level.FINER, "Search for {0}", id.toString());
 
         Flgt flgt = em.find(Flgt.class, id);
 
         if (flgt != null) {
-            System.out.println("Return " + flgt.toString());
+            LOG.log(Level.FINER, "Return {0}", flgt.toString());
         }
         else {
-            System.out.println("Return [null]");
+            LOG.log(Level.FINER, "Return [null]");
         }
 
         return flgt;
@@ -71,14 +72,14 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
         if (id == null || id.getFlgtNo().isEmpty() || id.getSchedFlgtDt().isEmpty()) {
             throw new IllegalArgumentException("id is invalid");
         }
-        System.out.println("Search for " + id.toString());
+        LOG.log(Level.FINER, "Search for {0}", id.toString());
 
         if (em.find(Flgt.class, id) != null) {
-            System.out.println("Return [true]");
+            LOG.log(Level.FINER, "Return [true]");
             return true;
         }
         else {
-            System.out.println("Return [false]");
+            LOG.log(Level.FINER, "Return [false]");
             return false;
         }
     }
@@ -89,7 +90,7 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
 
         query = em.createQuery("SELECT count(f) FROM FLGT f");
         long count = (long) query.getSingleResult();
-        System.out.println("Return [" + count + "]");
+        LOG.log(Level.FINER, "Return [{0}]", count);
 
         return count;
     }
@@ -98,13 +99,14 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
     public List<FlgtSgmt> getFlgtRoute(FlgtPK id) {
         List<FlgtSgmt> route = new ArrayList<>();
 
-        System.out.println("Search for " + id.toString());
+        LOG.log(Level.FINER, "Search for {0}", id.toString());
         if (exists(id)) {
             route = em.createQuery("select r FROM FLGTSGMT r WHERE r.flgtSgmtPK.flgtPK = :id ORDER BY r.seqNo")
                     .setParameter("id", id)
                     .getResultList();
         }
-        System.out.println("Return [" + route.size() + "] route(s)");
+        LOG.log(Level.FINER, "Return [{0}] route(s)", route.size());
+
         return route;
     }
 
@@ -126,14 +128,14 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
             throw new IllegalArgumentException("count < 1");
         }
 
-        System.out.println("Offset=[" + offset + "] count=[" + count + "]");
+        LOG.log(Level.FINER, "Offset=[{0}] count=[{1}]", new Object[]{offset, count});
 
         Query query = em.createQuery("select f FROM FLGT f ORDER BY f.flgtPK.schedFlgtDt");
         query.setFirstResult(offset);
         query.setMaxResults(count);
 
         List<Flgt> flgtList = query.getResultList();
-        System.out.println("Return [" + flgtList.size() + "] flight(s)");
+        LOG.log(Level.FINER, "Return [{0}] flight(s)", flgtList.size());
 
         return flgtList;
     }
@@ -151,14 +153,14 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
             throw new IllegalArgumentException("count < 1");
         }
 
-        System.out.println("Search max [" + count + "] PAX ARRIVALS for [" + arpo + "] [" + startEat + "]");
+        LOG.log(Level.FINER, "Search max [{0}] PAX ARRIVALS for [{1}] [{2}]", new Object[]{count, arpo, startEat});
 
         Query query = em.createQuery("select s FROM FLGTSGMTSCHEDULE s WHERE s.flgtSgmtPK.arpo = :arpo and s.eat >= :startEat ORDER BY s.eat");
         query.setParameter("arpo", arpo).setParameter("startEat", startEat);
         query.setMaxResults(count);
         List<FlgtSgmtSchedule> sgmtScheduleList = query.getResultList();
 
-        System.out.println("Found [" + sgmtScheduleList.size() + "] sgmt schedule(s)");
+        LOG.log(Level.FINER, "Found [{0}] sgmt schedule(s)", sgmtScheduleList.size());
 
         List<ArrivalVO> arrivalList = new ArrayList<>();
         for (FlgtSgmtSchedule sgmtSchedule : sgmtScheduleList) {
@@ -166,7 +168,7 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
                 ArrivalVO arrival = buildArrivalVO(sgmtSchedule);
 
                 arrivalList.add(arrival);
-                System.out.println(arrival.toString());
+                LOG.finer(arrival.toString());
             }
         }
 
@@ -179,14 +181,14 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
             throw new IllegalArgumentException("count < 1");
         }
 
-        System.out.println("Search max [" + count + "] PAX DEPARTURES for [" + arpo + "] [" + startEdt + "]");
+        LOG.log(Level.FINER, "Search max [{0}] PAX DEPARTURES for [{1}] [{2}]", new Object[]{count, arpo, startEdt});
 
         Query query = em.createQuery("select s FROM FLGTSGMTSCHEDULE s WHERE s.flgtSgmtPK.arpo = :arpo and s.eat >= :startEdt ORDER BY s.eat");
         query.setParameter("arpo", arpo).setParameter("startEdt", startEdt);
         query.setMaxResults(count);
         List<FlgtSgmtSchedule> sgmtScheduleList = query.getResultList();
 
-        System.out.println("Found [" + sgmtScheduleList.size() + "] sgmt schedule(s)");
+        LOG.log(Level.FINER, "Found [{0}] sgmt schedule(s)", sgmtScheduleList.size());
 
         List<DepartureVO> departureList = new ArrayList<>();
         for (FlgtSgmtSchedule sgmtSchedule : sgmtScheduleList) {
@@ -194,7 +196,7 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
                 DepartureVO departure = buildDepartureVO(sgmtSchedule);
 
                 departureList.add(departure);
-                System.out.println(departure.toString());
+                LOG.finer(departure.toString());
             }
         }
 
@@ -207,14 +209,14 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
             throw new IllegalArgumentException("count < 1");
         }
 
-        System.out.println("Search max [" + count + "] ARRIVALS for [" + arpo + "] [" + startEat + "]");
+        LOG.log(Level.FINER, "Search max [{0}] ARRIVALS for [{1}] [{2}]", new Object[]{count, arpo, startEat});
 
         Query query = em.createQuery("select s FROM FLGTSGMTSCHEDULE s WHERE s.flgtSgmtPK.arpo = :arpo and s.eat >= :startEat ORDER BY s.eat");
         query.setParameter("arpo", arpo).setParameter("startEat", startEat);
         query.setMaxResults(count);
         List<FlgtSgmtSchedule> sgmtScheduleList = query.getResultList();
 
-        System.out.println("Found [" + sgmtScheduleList.size() + "] sgmt schedule(s)");
+        LOG.log(Level.FINER, "Found [{0}] sgmt schedule(s)", sgmtScheduleList.size());
 
         List<ArrivalVO> arrivalList = new ArrayList<>();
         for (FlgtSgmtSchedule sgmtSchedule : sgmtScheduleList) {
@@ -222,7 +224,7 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
                 ArrivalVO arrival = buildArrivalVO(sgmtSchedule);
 
                 arrivalList.add(arrival);
-                System.out.println(arrival.toString());
+                LOG.finer(arrival.toString());
             }
         }
 
@@ -235,14 +237,14 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
             throw new IllegalArgumentException("count < 1");
         }
 
-        System.out.println("Search max [" + count + "] DEPARTURES for [" + arpo + "] [" + startEdt + "]");
+        LOG.log(Level.FINER, "Search max [{0}] DEPARTURES for [{1}] [{2}]", new Object[]{count, arpo, startEdt});
 
         Query query = em.createQuery("select s FROM FLGTSGMTSCHEDULE s WHERE s.flgtSgmtPK.arpo = :arpo and s.eat >= :startEdt ORDER BY s.eat");
         query.setParameter("arpo", arpo).setParameter("startEdt", startEdt);
         query.setMaxResults(count);
         List<FlgtSgmtSchedule> sgmtScheduleList = query.getResultList();
 
-        System.out.println("Found [" + sgmtScheduleList.size() + "] sgmt schedule(s)");
+        LOG.log(Level.FINER, "Found [{0}] sgmt schedule(s)", sgmtScheduleList.size());
 
         List<DepartureVO> departureList = new ArrayList<>();
         for (FlgtSgmtSchedule sgmtSchedule : sgmtScheduleList) {
@@ -250,7 +252,7 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
                 DepartureVO departure = buildDepartureVO(sgmtSchedule);
 
                 departureList.add(departure);
-                System.out.println(departure.toString());
+                LOG.finer(departure.toString());
             }
         }
 
@@ -265,7 +267,7 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
 
         boolean ret = true;
 
-        System.out.println("Find sgmt for flgt " + sgmt.getFlgtSgmtPK().getFlgtPK().toString() + " with seqNo < " + sgmt.getSeqNo());
+        LOG.log(Level.FINER, "Find sgmt for flgt {0} with seqNo < {1}", new Object[]{sgmt.getFlgtSgmtPK().getFlgtPK().toString(), sgmt.getSeqNo()});
 
         // Fetch the segments for this flight with a lesser seqNo
         Query query = em.createQuery("select s.seqNo FROM FLGTSGMT s WHERE s.flgtSgmtPK.flgtPK = :flgtPK and s.seqNo < :seqNo");
@@ -287,7 +289,7 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
 
         boolean ret = true;
 
-        System.out.println("Find sgmt for flgt " + sgmt.getFlgtSgmtPK().getFlgtPK().toString() + " with seqNo > " + sgmt.getSeqNo());
+        LOG.log(Level.FINER, "Find sgmt for flgt {0} with seqNo > {1}", new Object[]{sgmt.getFlgtSgmtPK().getFlgtPK().toString(), sgmt.getSeqNo()});
 
         // Fetch the segments for this flight with a greater seqNo
         Query query = em.createQuery("select s.seqNo FROM FLGTSGMT s WHERE s.flgtSgmtPK.flgtPK = :flgtPK and s.seqNo > :seqNo");
@@ -377,7 +379,7 @@ public class FlgtManager implements FlgtManagerLocal, FlgtManagerRemote {
             throw new IllegalArgumentException("sgmt == null");
         }
 
-        System.out.println("Find sgmt for flgt " + sgmt.getFlgtSgmtPK().getFlgtPK().toString() + " with seqNo < " + sgmt.getSeqNo());
+        LOG.log(Level.FINER, "Find sgmt for flgt {0} with seqNo < {1}", new Object[]{sgmt.getFlgtSgmtPK().getFlgtPK().toString(), sgmt.getSeqNo()});
 
         String ret = "Unknown";
 
