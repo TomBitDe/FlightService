@@ -4,7 +4,6 @@ package flightservice.model;
  * A flight status can be delayed, canceled...
  */
 public enum FlgtStatus {
-
     /**
      * Flight is on time
      */
