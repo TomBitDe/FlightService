@@ -40,7 +40,11 @@ public enum FlgtStatus {
     /**
      * Status is unknown
      */
-    Unknown("Unknown");
+    Unknown("Unknown"),
+    /**
+     * Flight is done
+     */
+    Done("Done");
 
     private final String statusText;
 
