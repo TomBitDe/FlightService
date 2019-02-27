@@ -7,7 +7,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * Arrival info display Value Object.<br>
  * <br>
- * Values that are special for arrival flights display.
+ * Values that are special for arrival flights display:<br>
+ * <br>
+ * - the origin airport of the flight<br>
+ * - the passenger exit as an indication where the passenger leaves the terminal<br>
  */
 @XmlRootElement(name = "ArrivalVO")
 public class ArrivalVO extends InfoDisplayVO implements Serializable {

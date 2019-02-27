@@ -7,7 +7,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * Info display Value Object.<br>
  * <br>
- * Values that are common for flight information display.
+ * Values that are common for flight information display:<br>
+ * <br>
+ * - the flight number<br>
+ * - the scheduled flight date<br>
+ * - the destination airport<br>
+ * - the expected arrival time<br>
+ * - the comments for that arrival<br>
+ * - the last update<br>
  */
 @XmlRootElement(name = "InfoDisplayVO")
 public class InfoDisplayVO implements Serializable {
