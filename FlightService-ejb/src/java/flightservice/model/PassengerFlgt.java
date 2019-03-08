@@ -42,4 +42,9 @@ public class PassengerFlgt extends Flgt {
     public void setSeatConfiguration(List<SeatCategory> seatConfiguration) {
         this.seatConfiguration = seatConfiguration;
     }
+
+    @Override
+    public String toString() {
+        return "PassengerFlgt{" + "seatConfiguration=" + seatConfiguration + " " + super.toString() + '}';
+    }
 }
