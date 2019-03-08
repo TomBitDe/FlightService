@@ -89,7 +89,7 @@ public class FlgtSgmt implements Serializable {
     @Basic(optional = false)
     private int version;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({
         @JoinColumn(name = "FLGTNO", referencedColumnName = "FLGTNO", insertable = false, updatable = false)
         , @JoinColumn(name = "SCHEDFLGTDT", referencedColumnName = "SCHEDFLGTDT", insertable = false, updatable = false)
@@ -97,7 +97,7 @@ public class FlgtSgmt implements Serializable {
     private Flgt flgt;
 
     @OneToOne(mappedBy = "FlgtSgmt", cascade = CascadeType.ALL,
-              fetch = FetchType.LAZY, optional = false)
+              fetch = FetchType.EAGER, optional = false)
     private FlgtSgmtSchedule sgmtSchedule;
 
     public FlgtSgmt() {

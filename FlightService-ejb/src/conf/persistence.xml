@@ -7,7 +7,10 @@
     <class>flightservice.model.PassengerFlgt</class>
     <class>flightservice.model.FreighterFlgt</class>
     <class>flightservice.model.FlgtSgmt</class>
-    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <class>flightservice.model.FlgtSgmtSchedule</class>
+    <class>flightservice.model.SeatCategory</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
       <property name="eclipselink.logging.level" value="FINE"/>
