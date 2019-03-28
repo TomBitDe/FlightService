@@ -20,12 +20,18 @@
  * - arrival airports are KGL, EBB, DXB and DWC.<br>
  * - departure airports are BRU, KGL, DUS and FRA.<br>
  * <br>
- * The general configuration is done in web.xml:
+ * The general configuration is done in <strong>web.xml</strong>:
  * <pre>{@code
  * <init-param>
  *     <param-name>jersey.config.server.provider.packages</param-name>
  *     <param-value>service</param-value>
- * </init-param>}</pre> points to the package where the service class resides.<br>
+ * </init-param>}</pre> points to the package where the service class resides (here <strong>service</strong>). The
+ * following extends the URL to call (here <strong>rest</strong>):
+ * <pre>{@code
+ * <servlet-mapping>
+ *      <servlet-name>Jersey Web Application</servlet-name>
+ *      <url-pattern>/rest/*</url-pattern>
+ * </servlet-mapping>}</pre> See the service calls above for examples.
  * <br>
  */
 package service;
