@@ -19,5 +19,13 @@
  * The test data in the database support the following:<br><br>
  * - arrival airports are KGL, EBB, DXB and DWC.<br>
  * - departure airports are BRU, KGL, DUS and FRA.<br>
+ * <br>
+ * The general configuration is done in web.xml:
+ * <pre>{@code
+ * <init-param>
+ *     <param-name>jersey.config.server.provider.packages</param-name>
+ *     <param-value>service</param-value>
+ * </init-param>}</pre> points to the package where the service class resides.<br>
+ * <br>
  */
 package service;
